@@ -21,6 +21,7 @@ private:
 	float learningRate;
 	float momentum;
 
+	bool loadData(std::string inFile, std::vector<double> &data);
 	//can use for test vector and training vector, and confusion matrix -- we are using a 
 	//variable cCount so we can pass it 785 or 10 depending
 	int getDataIndex(std::vector<perceptron> &vec, int row, int col, int cCount);
@@ -45,10 +46,11 @@ public:
 		
 	}
 
-	bool loadData(std::string inFile);
+		
+	bool loadWrapper(std::string inFile_training, std::string inFile_test);
 	bool saveData(std::string outFile);
-	
+	void setBias();
 
-	~dataManager();
+	//~dataManager();
 };
 
