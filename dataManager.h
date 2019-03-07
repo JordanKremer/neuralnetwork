@@ -23,11 +23,7 @@ private:
 
 	bool loadData(std::string inFile, std::vector<std::vector<double>> &data, int rowCount);
 	void setBias(std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int bias);
-	std::vector<double> convertToDouble(std::string to_split);
 
-	//can use for test vector and training vector, and confusion matrix -- we are using a 
-	//variable cCount so we can pass it 785 or 10 depending
-	int getDataIndex(std::vector<perceptron> &vec, int row, int col, int cCount);
 
 public:
 	dataManager(int outputCount, int hiddenCount, int trainingRep, int cCount, int rCount):colCount(cCount), rowCount(rCount)
@@ -51,7 +47,6 @@ public:
 		
 	}
 
-		
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);
 	bool saveData(std::string outFile);
 	void setBiasWrapper(int bias);

@@ -123,6 +123,7 @@
   <ItemGroup>
     <ClInclude Include="csv.h" />
     <ClInclude Include="dataManager.h" />
+    <ClInclude Include="parser.hpp" />
     <ClInclude Include="perceptron.h" />
   </ItemGroup>
   <ItemGroup>
