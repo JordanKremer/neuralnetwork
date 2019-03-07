@@ -13,15 +13,18 @@ private:
 	std::vector<double> testRepresentation;
 	std::vector<double> fractionData;
 
-	std::vector<double> trainingData;
-	std::vector<double> testData;
+	std::vector<std::vector<double>> trainingData;
+	std::vector<std::vector<double>> testData;
 
 	int colCount;
 	int rowCount;
 	float learningRate;
 	float momentum;
 
-	bool loadData(std::string inFile, std::vector<double> &data);
+	bool loadData(std::string inFile, std::vector<std::vector<double>> &data, int rowCount);
+	void setBias(std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int bias);
+	std::vector<double> convertToDouble(std::string to_split);
+
 	//can use for test vector and training vector, and confusion matrix -- we are using a 
 	//variable cCount so we can pass it 785 or 10 depending
 	int getDataIndex(std::vector<perceptron> &vec, int row, int col, int cCount);
@@ -35,11 +38,13 @@ public:
 		//parallelize this 
 		for (int perc = 0; perc < outputCount; ++perc)
 		{
-			perceptron p(perc, colCount);
+			//The outer layer only has the hidden layers connecting to them
+			perceptron p(perc, hiddenCount);
 			outputLayer.push_back(p);
 		}
 		for(int perc = 0; perc < hiddenCount; ++perc)
 		{
+			//The hidden layer is connected to all inputs
 			perceptron p(perc, colCount);
 			hiddenLayer.push_back(p);
 		}
@@ -49,7 +54,7 @@ public:
 		
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);
 	bool saveData(std::string outFile);
-	void setBias();
+	void setBiasWrapper(int bias);
 
 	//~dataManager();
 };
