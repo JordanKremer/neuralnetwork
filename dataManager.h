@@ -16,17 +16,25 @@ private:
 	std::vector<std::vector<double>> trainingData;
 	std::vector<std::vector<double>> testData;
 
+	int bias;
 	int colCount;
 	int rowCount;
 	float learningRate;
 	float momentum;
 
-	bool loadData(std::string inFile, std::vector<std::vector<double>> &data, int rowCount);
-	void setBias(std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int bias);
-
+	bool loadData(std::string inFile, std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int rowCount);
+	//void setBias(std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int bias);
+	double determineTarget(int outputIndex, int rowRep)
+	{
+		if (rowRep == outputIndex)
+			return 0.9;
+		else
+			return 0.1;
+	}
 
 public:
-	dataManager(int outputCount, int hiddenCount, int trainingRep, int cCount, int rCount):colCount(cCount), rowCount(rCount)
+	dataManager(int outputCount, int hiddenCount, int trainingRep, int cCount, int rCount, int b):colCount(cCount), 
+		rowCount(rCount), bias(b) //fix this
 	{
 		//outputLayer(boost::counting_iterator<int>(0), boost::counting_iterator<int>(10));
 		//std::vector<perceptron> v(boost::counting_iterator<int>(0), boost::counting_iterator<int>(10));
@@ -49,7 +57,8 @@ public:
 
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);
 	bool saveData(std::string outFile);
-	void setBiasWrapper(int bias);
+
+	//void setBiasWrapper(int bias);
 
 	//~dataManager();
 };
