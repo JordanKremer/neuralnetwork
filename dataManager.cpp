@@ -119,9 +119,9 @@ void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vecto
 		nodes[idx].setActivation(computeActivation(sum));
 	}
 }
-void dataManager::calculateOutputError() 
+void dataManager::calculateOutputError(int rowRepresentation) 
 {
-
+	std::for_each(std::execution::par, outputLayer.begin(), outputLayer.end(), [rowRepresentation](perceptron &p) {p.setError(rowRepresentation); });
 }
 void dataManager::calculateHiddenError()
 {
@@ -139,9 +139,27 @@ for (int node = 0; node < outputLayer.size(); ++node)
 	outputLayer.updateWeights();
 	*/
 
-	std::for_each(std::execution::par, outputLayer.begin(),
-		outputLayer.end(), [learningRate, momentum, data](perceptron & p) {p.updateWeights(learningRate, momentum, data); });
+	std::vector<double> hiddenActivations = getHiddenActivations();
 
+	std::for_each(std::execution::par, outputLayer.begin(),
+		outputLayer.end(), [learningRate, momentum, hiddenActivations](perceptron & p) 
+								{p.updateWeights(learningRate, momentum, hiddenActivations); });
+
+	std::for_each(std::execution::par, hiddenLayer.begin(),
+		hiddenLayer.end(), [learningRate, momentum, data](perceptron & p) 
+								{p.updateWeights(learningRate, momentum, data); });
 }
 
-std::vector<double> dataManager::getHiddenActivations(){}
+std::vector<double> dataManager::getHiddenActivations()
+{
+	std::vector<double> activations; 
+	activations.reserve(hiddenLayer.size());
+
+	//do not parallelize, this needs to be in correct order
+	for (auto& h : hiddenLayer)
+	{
+		activations.push_back(h.getActivation());
+	}
+
+	return activations;
+}
