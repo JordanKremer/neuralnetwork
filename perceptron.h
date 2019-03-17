@@ -14,7 +14,7 @@ private:
 	std::vector<double> previousDeltaWeights;
 
 public:
-	perceptron(int mNum, int colCount):machineNum(mNum), error(0), activation(0)
+	perceptron(int mNum, int weightCount):machineNum(mNum), error(0), activation(0)
 	{
 
 		std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -34,7 +34,7 @@ public:
 			https://stackoverflow.com/questions/12614164/generating-random-numbers-with-uniform-distribution-using-thrust
 			try this!^^^
 		*/
-		for (int col = 0; col < colCount; ++col)
+		for (int col = 0; col < weightCount; ++col)
 		{
 			weights.push_back(dis(gen));
 		}
@@ -49,6 +49,11 @@ public:
 			 weights.begin());
 		*/
 	};
+
+
+	const std::shared_ptr <std::vector<double>> getWeights() { return  std::make_shared<std::vector<double>>(weights); }
+	const std::shared_ptr <std::vector<double>> getPrevioiusWeights(){ std::make_shared<std::vector<double>>(previousDeltaWeights); }
+	void setActivation(double act) {}
 	inline const double getError() { return error; };
 	inline const double getActivation() { return activation; };
 

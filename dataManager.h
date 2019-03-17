@@ -3,15 +3,21 @@
 #include "perceptron.h"
 #include <boost/iterator/counting_iterator.hpp>
 #include <string>
+#include <utility>
+#include <math.h>
+
+
 class dataManager
 {
 private:
 	std::vector<perceptron> outputLayer;
 	std::vector<perceptron> hiddenLayer;
-	std::vector<int> confusionMatrix;
+	
 	std::vector<double> trainingRepresentation;
 	std::vector<double> testRepresentation;
 	std::vector<double> fractionData;
+
+	std::vector<int> confusionMatrix;
 
 	std::vector<std::vector<double>> trainingData;
 	std::vector<std::vector<double>> testData;
@@ -21,8 +27,12 @@ private:
 	int rowCount;
 	float learningRate;
 	float momentum;
+	std::pair<int, int> trainingDim;
+	std::pair<int, int> testingDim;
 
-	bool loadData(std::string inFile, std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int rowCount);
+	//make pair for row cols for data and test?
+	 
+	bool loadData(std::string inFile, std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int rowCount, int colCount);
 	//void setBias(std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int bias);
 	double determineTarget(int outputIndex, int rowRep)
 	{
@@ -55,8 +65,18 @@ public:
 		
 	}
 
+	double computeActivation(double sum)
+	{
+		//exp() returns e^-sum
+		return 1 / (1 + exp(-sum));
+	}
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);
 	bool saveData(std::string outFile);
+	void learn();
+	void calculateActivation(std::vector<perceptron> &node, std::vector<double> &inputData);
+	void calculateOutputError();
+	void calculateHiddenError();
+	void updateWeights();
 
 	//void setBiasWrapper(int bias);
 
