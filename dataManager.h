@@ -78,10 +78,10 @@ public:
 	std::vector<double> getHiddenActivations();
 	void learn();
 	void calculateActivation(std::vector<perceptron> &node, std::vector<double> &inputData);
-	void calculateOutputError(int rowRepresentation);
+	void calculateOutputError(double rowRepresentation);
 	void calculateHiddenError();
 	void updateWeights(int learningRate, int momentum, std::vector<double> data);
-
+	void test();
 	//void setBiasWrapper(int bias);
 
 	//~dataManager();

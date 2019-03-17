@@ -15,7 +15,7 @@ private:
 	std::vector<double> previousDeltaWeights;
 
 public:
-	perceptron(int mNum, int weightCount):machineNum(mNum), error(0), activation(0)
+	perceptron(int mNum, int weightCount):machineNum(mNum), error(0), activation(0), previousDeltaWeights(weightCount, 0)
 	{
 
 		std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -35,10 +35,12 @@ public:
 			https://stackoverflow.com/questions/12614164/generating-random-numbers-with-uniform-distribution-using-thrust
 			try this!^^^
 		*/
+		weights.reserve(weightCount);
 		for (int col = 0; col < weightCount; ++col)
 		{
 			weights.push_back(dis(gen));
 		}
+
 	};
 
 	inline bool setWeights(std::vector<double> newWeights)
@@ -54,8 +56,10 @@ public:
 
 	void updateWeights(int learningRate, int momentum, std::vector<double> data)
 	{
-#pragma omp parallel for
-		for (int index = 0; index < weights.size(); ++index)
+
+		//must start at index of 1 because 0th is row representation and not a weight
+#pragma omp parallel for 
+		for (int index = 1; index < weights.size(); ++index)
 		{
 			double deltaWeight = (learningRate * error * data[index]) + (momentum * previousDeltaWeights[index]);
 			previousDeltaWeights[index] = deltaWeight;
