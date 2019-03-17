@@ -15,6 +15,7 @@
 #include <numeric>
 #include <iterator>
 #include "parser.hpp"
+#include <array>
 #include <memory>
 
 bool dataManager::loadWrapper(std::string inFile_training, std::string inFile_test)
@@ -64,11 +65,9 @@ bool dataManager::loadData(std::string inFile, std::vector<std::vector<double>> 
 			first = true;
 		}
 
-		//shuffle data rows  AFTER SETTING BIAS!!!!!
-		//OTHERWISE THE BIAS AND THE ROWS ARE OFFSYNC
-		//std::srand(unsigned(std::time(0)));
-		//auto rng = std::default_random_engine{};
-		//std::shuffle(std::begin(data), std::end(data), rng);
+		std::srand(unsigned(std::time(0)));
+		auto rng = std::default_random_engine{};
+		std::shuffle(std::begin(data), std::end(data), rng);
 
 		return true;
 	}
@@ -85,7 +84,7 @@ void dataManager::learn()
 	{
 		std::cout << "\nRow: " << rowRep;
 		calculateActivation(hiddenLayer, row);
-		calculateActivation(outputLayer, row);
+		calculateActivation(outputLayer, getHiddenActivations());
 		calculateOutputError(row[0]); //should be the row rep
 		calculateHiddenError();
 		//first updates output, then hidden
@@ -108,6 +107,26 @@ void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vecto
 											0.0, std::plus<double>(), std::multiplies<double>());
 		nodes[idx].setActivation(computeActivation(sum));
 	}
+}
+
+
+std::vector<double> dataManager::getTestingActivations(std::vector<perceptron> & nodes, std::vector<double> &inputData)
+{
+	double* tmpAct = new double(nodes.size());
+
+#pragma omp parallel for
+	for (int idx = 0; idx < nodes.size(); ++idx)
+	{
+		std::shared_ptr<std::vector<double>> weights = nodes[idx].getWeights();
+		double sum = std::transform_reduce(std::execution::par, weights->begin(), weights->end(), inputData.begin() + 1,  //offset of 1 for the row rep
+			0.0, std::plus<double>(), std::multiplies<double>());
+
+		tmpAct[idx] = computeActivation(sum);
+	}
+
+	std::vector<double> activations(tmpAct, tmpAct + nodes.size());
+
+	return activations;
 }
 
 
@@ -159,7 +178,7 @@ void dataManager::updateWeights(int learningRate, int momentum, std::vector<doub
 
 
 
-std::vector<double> dataManager::getHiddenActivations()
+std::vector<double>& dataManager::getHiddenActivations()
 {
 	std::vector<double> activations; 
 	activations.reserve(hiddenLayer.size());
@@ -176,21 +195,29 @@ std::vector<double> dataManager::getHiddenActivations()
 
 void dataManager::testWrapper()
 {
+	//row rep is now in the row itself
+	//because we are done training this can be done in parallel
+	//make sure that nothing is saved to mem in shared data in test
 
-	//should I just tag the row rep onto the end and for my 
-	//iterations just do end-1?
-	std::for_each(std::execution::par, )
-}
-void dataManager::test(std::vector<double> &testRow, int rowRepresentation, )
-{
-	std::vector<double> sum;
-	sum.reserve(outputLayer.size());
-
-	//calculate activations for the given row
-
-
-	for (auto &out : outputLayer)
+	//this may not be thread safe to update count like this
+	int count = 0;
+	std::for_each(std::execution::par, testData.begin(), testData.end(), [&count, this](std::vector<double> &row) 
 	{
-		sum.push_back(out.getActivation());
-	}
+		count += this->test(row);
+	});
+}
+
+
+int dataManager::test(std::vector<double> &testRow)
+{
+	//calculate activations for the given row
+	//returns array so we can use OMP parallel directive
+	std::vector<double> hiddenActivations = getTestingActivations(hiddenLayer, testRow);
+	std::vector<double> outputActivations = getTestingActivations(outputLayer, hiddenActivations);
+	
+	double guess = *std::max_element(outputActivations.begin(), outputActivations.end());
+	return (guess == testRow[0]) ? 1 : 0;
+
+
+	//if we update the confusion matrix here, make sure to use a mutex
 }

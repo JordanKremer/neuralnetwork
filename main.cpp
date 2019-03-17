@@ -8,7 +8,7 @@
 int main(int argc, char** argv)
 {
 
-	dataManager manager(10,100,0,785,0, 1);
+	dataManager manager(10,10,0,785,0, 1);
 	manager.loadWrapper("mnist_train.csv", "mnist_test.csv");
 	manager.learn();
 	//manager.setBiasWrapper(1);
