@@ -83,8 +83,8 @@ void dataManager::learn()
 	for (auto &row : trainingData)
 	{
 		std::cout << "\nRow: " << rowRep;
-		calculateActivation(hiddenLayer, row);
-		calculateActivation(outputLayer, getHiddenActivations());
+		calculateActivation(hiddenLayer, row, 1);
+		calculateActivation(outputLayer, getHiddenActivations(), 0);
 		calculateOutputError(row[0]); //should be the row rep
 		calculateHiddenError();
 		//first updates output, then hidden
@@ -97,20 +97,20 @@ void dataManager::learn()
 
 
 //make sure to include compilation tags
-void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vector<double> & inputData) 
+void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vector<double> & inputData, int offset) 
 {
-#pragma omp parallel for
+//#pragma omp parallel for
 	for(int idx = 0; idx < nodes.size(); ++idx)
 	{
 		std::shared_ptr<std::vector<double>> weights = nodes[idx].getWeights();
-		double sum = std::transform_reduce(std::execution::par, weights->begin(), weights->end(), inputData.begin()+1,  //offset of 1 for the row rep
+		double sum = std::transform_reduce(std::execution::par, weights->begin(), weights->end(), inputData.begin()+offset,  //offset of 1 for the row rep
 											0.0, std::plus<double>(), std::multiplies<double>());
 		nodes[idx].setActivation(computeActivation(sum));
 	}
 }
 
 
-std::vector<double> dataManager::getTestingActivations(std::vector<perceptron> & nodes, std::vector<double> &inputData)
+std::vector<double> dataManager::getTestingActivations(std::vector<perceptron> & nodes, std::vector<double> &inputData, int offset)
 {
 	double* tmpAct = new double(nodes.size());
 
@@ -118,7 +118,7 @@ std::vector<double> dataManager::getTestingActivations(std::vector<perceptron> &
 	for (int idx = 0; idx < nodes.size(); ++idx)
 	{
 		std::shared_ptr<std::vector<double>> weights = nodes[idx].getWeights();
-		double sum = std::transform_reduce(std::execution::par, weights->begin(), weights->end(), inputData.begin() + 1,  //offset of 1 for the row rep
+		double sum = std::transform_reduce(std::execution::par, weights->begin(), weights->end(), inputData.begin() + offset,  //offset of 1 for the row rep
 			0.0, std::plus<double>(), std::multiplies<double>());
 
 		tmpAct[idx] = computeActivation(sum);
@@ -212,8 +212,8 @@ int dataManager::test(std::vector<double> &testRow)
 {
 	//calculate activations for the given row
 	//returns array so we can use OMP parallel directive
-	std::vector<double> hiddenActivations = getTestingActivations(hiddenLayer, testRow);
-	std::vector<double> outputActivations = getTestingActivations(outputLayer, hiddenActivations);
+	std::vector<double> hiddenActivations = getTestingActivations(hiddenLayer, testRow, 1);  //offset of 1 because 0 is the row rep
+	std::vector<double> outputActivations = getTestingActivations(outputLayer, hiddenActivations, 0); //no need for offset heree
 	
 	double guess = *std::max_element(outputActivations.begin(), outputActivations.end());
 	return (guess == testRow[0]) ? 1 : 0;

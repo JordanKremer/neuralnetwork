@@ -75,7 +75,7 @@ public:
 
 	const std::shared_ptr <std::vector<double>> getWeights() { return  std::make_shared<std::vector<double>>(weights); }
 	const std::shared_ptr <std::vector<double>> getPreviousWeights(){ std::make_shared<std::vector<double>>(previousDeltaWeights); }
-	void setActivation(double act) {}
+	void setActivation(double act) { activation = act; }
 	void setError(double er) { error = er; };
 	const double getError() { return error; };
 	const double getActivation() { return activation; };

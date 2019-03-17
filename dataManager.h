@@ -77,8 +77,8 @@ public:
 	bool saveData(std::string outFile);
 	std::vector<double>& getHiddenActivations();
 	void learn();
-	void calculateActivation(std::vector<perceptron> &node, std::vector<double> &inputData);
-	std::vector<double> getTestingActivations(std::vector<perceptron> & node, std::vector<double> &inputData);
+	void calculateActivation(std::vector<perceptron> &node, std::vector<double> &inputData, int offset);
+	std::vector<double> getTestingActivations(std::vector<perceptron> & node, std::vector<double> &inputData, int offset);
 	void calculateOutputError(double rowRepresentation);
 	void calculateHiddenError();
 	void updateWeights(int learningRate, int momentum, std::vector<double> data);
