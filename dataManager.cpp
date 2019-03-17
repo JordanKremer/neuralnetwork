@@ -119,24 +119,6 @@ void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vecto
 
 
 
-double dataManager::pReducTest(perceptron &nodes, std::vector<double> & inputData, int offset)
-{
-	//for (int i = 0; i < nodes.size(); ++i)
-	//{
-	std::shared_ptr<std::vector<double>> weight = nodes.getWeights();
-		double sum = 0;
-		int k = 0;
-		for (int x = 0 + offset; x < weight->size(); ++x)
-		{
-			sum += inputData[x] * weight->at(k);
-			++k;
-		}
-
-		//std::cout << "\nSum2 : " << sum;
-		return sum;
-//	}
-}
-
 
 std::vector<double> dataManager::getTestingActivations(std::vector<perceptron> & nodes, std::vector<double> &inputData, int offset)
 {

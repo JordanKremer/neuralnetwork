@@ -34,7 +34,6 @@ private:
 	//make pair for row cols for data and test?
 	 
 	bool loadData(std::string inFile, std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int rowCount, int colCount);
-	//void setBias(std::vector<std::vector<double>> &data, std::vector<double> &repHolder, int bias);
 	double determineTarget(int outputIndex, int rowRep)
 	{
 		if (rowRep == outputIndex)
@@ -50,7 +49,6 @@ public:
 		learningRate = 0.1;
 		momentum = 0.9;
 
-		//parallelize this 
 		for (int perc = 0; perc < outputCount; ++perc)
 		{
 			//The outer layer only has the hidden layers connecting to them
@@ -82,6 +80,5 @@ public:
 	void testWrapper();
 	int test(std::vector<double> &testRow);
 	void printMatrix();
-	double pReducTest(perceptron &nodes, std::vector<double> & inputData, int offset);
 };
 
