@@ -18,6 +18,8 @@
 #include <memory>
 #include <mutex>
 
+std::mutex mut;
+
 bool dataManager::loadWrapper(std::string inFile_training, std::string inFile_test)
 {
 	std::cout << "\nLoading...";
@@ -80,7 +82,7 @@ void dataManager::learn()
 	//This CANNOT be parallelized. 1 row at a time.
 	for (auto &row : trainingData)
 	{
-		std::cout << "\nRow: " << rowRep;
+		//std::cout << "\nRow: " << rowRep;
 		calculateActivation(hiddenLayer, row, 1);
 		std::vector<double> tmp = getHiddenActivations();
 		calculateActivation(outputLayer, tmp, 0);
@@ -196,18 +198,16 @@ void dataManager::testWrapper()
 {
 	std::cout << "\n\nIn test";
 	int count = 0;
-	std::mutex mtx;
-	std::for_each(testData.begin(), testData.end(), [&count, &mtx, this](std::vector<double> row) 
-	{
-
-		int tmpCnt = this->test(row);
-		mtx.lock();
-		count += tmpCnt;
-		mtx.unlock();
-
-	});
 	
-	std::cout << "\n\n\n\n" + count;
+	std::for_each(testData.begin(), testData.end(), [&count, this](std::vector<double> row) 
+	{
+		int tmpCnt = this->test(row);
+		mut.lock();
+		count += tmpCnt;
+		mut.unlock();
+	});
+
+	std::cout << "Correct guesses: " << count;
 }
 
 
@@ -218,13 +218,22 @@ int dataManager::test(std::vector<double> &testRow)
 	std::vector<double> hiddenActivations = getTestingActivations(hiddenLayer, testRow, 1);  //offset of 1 because 0 is the row rep
 	std::vector<double> outputActivations = getTestingActivations(outputLayer, hiddenActivations, 0); //no need for offset heree
 	
-
-	//I need the machinenumber of the max activation
-	//this will be used as the guess, not the actual activation itself
 	auto guess = distance(outputActivations.begin(), std::max_element(outputActivations.begin(), outputActivations.end()));
 
+	
+	confusionMatrix.at(guess * 10 + testRow[0])++;
+
 	return (guess == testRow[0]) ? 1 : 0;
+}
 
-
-	//if we update the confusion matrix here, make sure to use a mutex
+void dataManager::printMatrix()
+{
+	int count = 0;
+	for (auto &cell : confusionMatrix)
+	{
+		if(count % 10 == 0)
+			std::cout << "\n";
+		std::cout << " " << cell;
+		count++;
+	}
 }

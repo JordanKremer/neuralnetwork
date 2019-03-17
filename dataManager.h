@@ -12,6 +12,7 @@ class dataManager
 private:
 	std::vector<perceptron> outputLayer;
 	std::vector<perceptron> hiddenLayer;
+
 	
 	std::vector<double> trainingRepresentation;
 	std::vector<double> testRepresentation;
@@ -44,7 +45,7 @@ private:
 
 public:
 	dataManager(int outputCount, int hiddenCount, int trainingRep, int cCount, int rCount, int b):colCount(cCount), 
-		rowCount(rCount), bias(b) //fix this
+		rowCount(rCount), bias(b), confusionMatrix(100,0) //fix this
 	{
 		learningRate = 0.1;
 		momentum = 0.9;
@@ -71,7 +72,6 @@ public:
 		return 1 / (1 + exp(-sum));
 	}
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);
-	bool saveData(std::string outFile);
 	std::vector<double> getHiddenActivations();
 	void learn();
 	void calculateActivation(std::vector<perceptron> &node, std::vector<double> &inputData, int offset);
@@ -81,5 +81,6 @@ public:
 	void updateWeights(int learningRate, int momentum, std::vector<double> data);
 	void testWrapper();
 	int test(std::vector<double> &testRow);
+	void printMatrix();
 };
 
