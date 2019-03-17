@@ -46,9 +46,6 @@ public:
 	dataManager(int outputCount, int hiddenCount, int trainingRep, int cCount, int rCount, int b):colCount(cCount), 
 		rowCount(rCount), bias(b) //fix this
 	{
-		//outputLayer(boost::counting_iterator<int>(0), boost::counting_iterator<int>(10));
-		//std::vector<perceptron> v(boost::counting_iterator<int>(0), boost::counting_iterator<int>(10));
-		
 		learningRate = 0.1;
 		momentum = 0.9;
 
@@ -75,7 +72,7 @@ public:
 	}
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);
 	bool saveData(std::string outFile);
-	std::vector<double>& getHiddenActivations();
+	std::vector<double> getHiddenActivations();
 	void learn();
 	void calculateActivation(std::vector<perceptron> &node, std::vector<double> &inputData, int offset);
 	std::vector<double> getTestingActivations(std::vector<perceptron> & node, std::vector<double> &inputData, int offset);
@@ -84,8 +81,5 @@ public:
 	void updateWeights(int learningRate, int momentum, std::vector<double> data);
 	void testWrapper();
 	int test(std::vector<double> &testRow);
-	//void setBiasWrapper(int bias);
-
-	//~dataManager();
 };
 

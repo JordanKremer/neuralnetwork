@@ -2,18 +2,17 @@
 c1xx : warning C4199: two-phase name lookup is not supported for C++/CLI, C++/CX, or OpenMP; use /Zc:twoPhase-
 c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\perceptron.h(62): warning C4018: '<': signed/unsigned mismatch
 c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\perceptron.h(77): warning C4834: discarding return value of function with 'nodiscard' attribute
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(52): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(53): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(49): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(50): warning C4305: '=': truncation from 'double' to 'float'
 c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\parser.hpp(248): warning C4244: '=': conversion from 'std::streamsize' to 'size_t', possible loss of data
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(91): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(103): warning C4018: '<': signed/unsigned mismatch
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(118): warning C4018: '<': signed/unsigned mismatch
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(90): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(104): warning C4018: '<': signed/unsigned mismatch
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(119): warning C4018: '<': signed/unsigned mismatch
   main.cpp
 c1xx : warning C4199: two-phase name lookup is not supported for C++/CLI, C++/CX, or OpenMP; use /Zc:twoPhase-
 c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\perceptron.h(62): warning C4018: '<': signed/unsigned mismatch
 c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\perceptron.h(77): warning C4834: discarding return value of function with 'nodiscard' attribute
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(52): warning C4305: '=': truncation from 'double' to 'float'
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(53): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(49): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(50): warning C4305: '=': truncation from 'double' to 'float'
   Generating Code...
-c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(192): warning C4172: returning address of local variable or temporary: activations
   NeuralNetwork.vcxproj -> C:\Users\Kremlin\source\repos\NeuralNetwork\Debug\NeuralNetwork.exe

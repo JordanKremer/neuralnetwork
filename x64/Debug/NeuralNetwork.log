@@ -1,0 +1,43 @@
+﻿  dataManager.cpp
+  Parallel algorithms are only available with C++17 or later.
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(49): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.h(50): warning C4305: '=': truncation from 'double' to 'float'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(90): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(107): error C2039: 'transform_reduce': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(107): error C3083: 'execution': the symbol to the left of a '::' must be a type
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(107): error C2039: 'par': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(107): error C2065: 'par': undeclared identifier
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(107): error C3861: 'transform_reduce': identifier not found
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(116): warning C4244: 'initializing': conversion from 'unsigned __int64' to 'double', possible loss of data
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(122): error C2039: 'transform_reduce': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(122): error C3083: 'execution': the symbol to the left of a '::' must be a type
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(122): error C2039: 'par': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(122): error C2065: 'par': undeclared identifier
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(122): error C3861: 'transform_reduce': identifier not found
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(138): error C3083: 'execution': the symbol to the left of a '::' must be a type
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(138): error C2039: 'par': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(138): error C2065: 'par': undeclared identifier
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(150): error C3083: 'execution': the symbol to the left of a '::' must be a type
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(150): error C2039: 'par': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(150): error C2065: 'par': undeclared identifier
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(153): error C2039: 'transform_reduce': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(153): error C3083: 'execution': the symbol to the left of a '::' must be a type
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(153): error C2039: 'par': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(153): error C2065: 'par': undeclared identifier
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(153): error C3861: 'transform_reduce': identifier not found
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(171): error C3083: 'execution': the symbol to the left of a '::' must be a type
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(171): error C2039: 'par': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(171): error C2065: 'par': undeclared identifier
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(175): error C3083: 'execution': the symbol to the left of a '::' must be a type
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(175): error C2039: 'par': is not a member of 'std'
+  d:\microsoft visual studio\vc\tools\msvc\14.16.27023\include\numeric(14): note: see declaration of 'std'
+c:\users\kremlin\source\repos\neuralnetwork\neuralnetwork\datamanager.cpp(175): error C2065: 'par': undeclared identifier
