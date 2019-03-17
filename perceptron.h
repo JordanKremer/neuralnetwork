@@ -54,12 +54,13 @@ public:
 	};
 
 
-	void updateWeights(int learningRate, int momentum, std::vector<double> data)
+	void updateWeights(float learningRate, float momentum, std::vector<double> data, int offset)
 	{
 
-		//must start at index of 1 because 0th is row representation and not a weight
-#pragma omp parallel for 
-		for (int index = 1; index < weights.size(); ++index)
+		//must start at index of 1 for hiddennodes because 0th is row representation and not a weight
+		//start at 0 for output layer
+//#pragma omp parallel for 
+		for (int index = 0 + offset; index < weights.size(); ++index)
 		{
 			double deltaWeight = (learningRate * error * data[index]) + (momentum * previousDeltaWeights[index]);
 			previousDeltaWeights[index] = deltaWeight;

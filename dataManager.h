@@ -78,9 +78,10 @@ public:
 	std::vector<double> getTestingActivations(std::vector<perceptron> & node, std::vector<double> &inputData, int offset);
 	void calculateOutputError(double rowRepresentation);
 	void calculateHiddenError();
-	void updateWeights(int learningRate, int momentum, std::vector<double> data);
+	void updateWeights(float learningRate, float momentum, std::vector<double> data);
 	void testWrapper();
 	int test(std::vector<double> &testRow);
 	void printMatrix();
+	double pReducTest(perceptron &nodes, std::vector<double> & inputData, int offset);
 };
 

@@ -102,14 +102,39 @@ void dataManager::learn()
 //make sure to include compilation tags
 void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vector<double> & inputData, int offset) 
 {
-#pragma omp parallel for
+//#pragma omp parallel for
 	for(int idx = 0; idx < nodes.size(); ++idx)
 	{
 		std::shared_ptr<std::vector<double>> weights = nodes[idx].getWeights();
+
+		//after testing transform_reduce gets same results as non transred
 		double sum = std::transform_reduce(std::execution::par, weights->begin(), weights->end(), inputData.begin()+offset,  //offset of 1 for the row rep
 											0.0, std::plus<double>(), std::multiplies<double>());
+		
+		//std::cout << "\nSum1 : " << sum;
+		//double sum2 = pReducTest(nodes[idx], inputData, offset);
 		nodes[idx].setActivation(computeActivation(sum));
 	}
+}
+
+
+
+double dataManager::pReducTest(perceptron &nodes, std::vector<double> & inputData, int offset)
+{
+	//for (int i = 0; i < nodes.size(); ++i)
+	//{
+	std::shared_ptr<std::vector<double>> weight = nodes.getWeights();
+		double sum = 0;
+		int k = 0;
+		for (int x = 0 + offset; x < weight->size(); ++x)
+		{
+			sum += inputData[x] * weight->at(k);
+			++k;
+		}
+
+		//std::cout << "\nSum2 : " << sum;
+		return sum;
+//	}
 }
 
 
@@ -136,9 +161,12 @@ void dataManager::calculateOutputError(double rowRepresentation)
 {
 	//we can use machinenum for target because there are only 10 in the ouput layer, 1 for each number to represent
 	std::for_each(std::execution::par, outputLayer.begin(), outputLayer.end(), [rowRepresentation](perceptron &p) 
+	//std::for_each(outputLayer.begin(), outputLayer.end(), [rowRepresentation](perceptron &p)
 	{
-		double target = (p.getMachineNum() == rowRepresentation) ? 0.9 : 0.1;
-		p.setError(p.getActivation() * (1 - p.getActivation()) * (target - p.getActivation()));
+ 		double target = (p.getMachineNum() == rowRepresentation) ? 0.9 : 0.1;
+		double activation = p.getActivation();
+		double error = activation * (1 - activation) * (target - activation);
+		p.setError(error);
 	});
 }
 
@@ -164,17 +192,17 @@ void dataManager::calculateHiddenError()
 
 
 //learning rate and momentum need to be passed as args for the lambdas
-void dataManager::updateWeights(int learningRate, int momentum, std::vector<double> data) 
+void dataManager::updateWeights(float learningRate, float momentum, std::vector<double> data) 
 {
 	std::vector<double> hiddenActivations = getHiddenActivations();
 
 	std::for_each(std::execution::par, outputLayer.begin(),
 		outputLayer.end(), [learningRate, momentum, hiddenActivations](perceptron & p) 
-								{p.updateWeights(learningRate, momentum, hiddenActivations);});
+								{p.updateWeights(learningRate, momentum, hiddenActivations, 0);});
 
 	std::for_each(std::execution::par, hiddenLayer.begin(),
 		hiddenLayer.end(), [learningRate, momentum, data](perceptron & p) 
-								{p.updateWeights(learningRate, momentum, data);});
+								{p.updateWeights(learningRate, momentum, data, 1);});
 }
 
 
@@ -198,7 +226,7 @@ void dataManager::testWrapper()
 {
 	std::cout << "\n\nIn test";
 	int count = 0;
-	
+	//std::for_each(std::execution::par, testData.begin(), testData.end(), [&count, this](std::vector<double> row) 
 	std::for_each(testData.begin(), testData.end(), [&count, this](std::vector<double> row) 
 	{
 		int tmpCnt = this->test(row);
