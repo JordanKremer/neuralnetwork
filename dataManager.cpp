@@ -12,10 +12,6 @@
 #include <algorithm>
 #include <ppl.h>
 #include <execution>
-//#include <experimental>
-//#include <experimental/numeric>
-//#include <experimental/execution_policy>
-//#include <thread>  can use to create tasks
 #include <numeric>
 #include <iterator>
 #include "parser.hpp"
@@ -131,7 +127,21 @@ void dataManager::calculateHiddenError()
 {
 
 }
-void dataManager::updateWeights() 
+void dataManager::updateWeights(int learningRate, int momentum, std::vector<double> data) 
 {
+	/*
+#pragma omp for
+	for(int node = 0; node < outputLayer.size(); ++node)
+		outputLayer.updateWeights();
+
+#pragma omp for
+for (int node = 0; node < outputLayer.size(); ++node)
+	outputLayer.updateWeights();
+	*/
+
+	std::for_each(std::execution::par, outputLayer.begin(),
+		outputLayer.end(), [learningRate, momentum, data](perceptron & p) {p.updateWeights(learningRate, momentum, data); });
 
 }
+
+std::vector<double> dataManager::getHiddenActivations(){}

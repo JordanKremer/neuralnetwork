@@ -72,11 +72,12 @@ public:
 	}
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);
 	bool saveData(std::string outFile);
+	std::vector<double> getHiddenActivations();
 	void learn();
 	void calculateActivation(std::vector<perceptron> &node, std::vector<double> &inputData);
 	void calculateOutputError();
 	void calculateHiddenError();
-	void updateWeights();
+	void updateWeights(int learningRate, int momentum, std::vector<double> data);
 
 	//void setBiasWrapper(int bias);
 

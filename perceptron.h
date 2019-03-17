@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <random>
+#include <execution>
 class perceptron
 {
 private:
@@ -51,11 +52,22 @@ public:
 	};
 
 
+	void updateWeights(int learningRate, int momentum, std::vector<double> data)
+	{
+#pragma omp parallel for
+		for (int index = 0; index < weights.size(); ++index)
+		{
+			double deltaWeight = (learningRate * error * data[index]) + (momentum * previousDeltaWeights[index]);
+			previousDeltaWeights[index] = deltaWeight;
+			weights[index] += deltaWeight;
+		}
+	}
+
 	const std::shared_ptr <std::vector<double>> getWeights() { return  std::make_shared<std::vector<double>>(weights); }
-	const std::shared_ptr <std::vector<double>> getPrevioiusWeights(){ std::make_shared<std::vector<double>>(previousDeltaWeights); }
+	const std::shared_ptr <std::vector<double>> getPreviousWeights(){ std::make_shared<std::vector<double>>(previousDeltaWeights); }
 	void setActivation(double act) {}
-	inline const double getError() { return error; };
-	inline const double getActivation() { return activation; };
+	const double getError() { return error; };
+	const double getActivation() { return activation; };
 
 };
 
