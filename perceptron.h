@@ -63,17 +63,19 @@ public:
 		}
 	}
 
-	void setError(int rowRepresentation)
+	/*void setError(int rowRepresentation)
 	{
 		double target = (machineNum == rowRepresentation) ? 0.9 : 0;
 		error = activation * (1 - activation) * (target - activation);
-	}
+	}*/
 
 	const std::shared_ptr <std::vector<double>> getWeights() { return  std::make_shared<std::vector<double>>(weights); }
 	const std::shared_ptr <std::vector<double>> getPreviousWeights(){ std::make_shared<std::vector<double>>(previousDeltaWeights); }
 	void setActivation(double act) {}
+	void setError(double er) { error = er; };
 	const double getError() { return error; };
 	const double getActivation() { return activation; };
+	const int getMachineNum() { return machineNum; }
 
 };
 

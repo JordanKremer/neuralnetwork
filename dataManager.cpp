@@ -74,30 +74,23 @@ bool dataManager::loadData(std::string inFile, std::vector<std::vector<double>> 
 
 }
 
+
+//remember compilation tags for exception handling, etc
 void dataManager::learn()
 {
-	//for each row in the
-	//for each row
-	/*
-		calculateActivation hidden
-		calculateActivation Output
-		calculateOutputError
-		calculateHiddenError
+	int rowRep = 0;
+	//This CANNOT be parallelized. 1 row at a time.
+	for (auto &row : trainingData)
+	{
+		calculateActivation(hiddenLayer, row);
+		calculateActivation(outputLayer, row);
+		calculateOutputError(trainingRepresentation[rowRep]);
+		calculateHiddenError();
+		//first updates output, then hidden
+		updateWeights(learningRate, momentum, row);
 
-		thread task both of these
-			updateWeights-- can use same function
-			use transform?
-				parallel version?
-					vector of inputs & vector of weights
-						should be same length
-						zipsum
-
-						Can use reduce for this
-							openMP
-		
-
-	*/
-
+		++rowRep;
+	}
 }
 
 
@@ -105,9 +98,6 @@ void dataManager::learn()
 //make sure to include compilation tags
 void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vector<double> & inputData) 
 {
-	//maybe make this parallel also
-	//for (auto n : nodes)
-	//std::for_each(std::execution::par, begin(nodes), end(nodes), [&])
 #pragma omp parallel for
 	for(int idx = 0; idx < nodes.size(); ++idx)
 	{
@@ -121,12 +111,33 @@ void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vecto
 }
 void dataManager::calculateOutputError(int rowRepresentation) 
 {
-	std::for_each(std::execution::par, outputLayer.begin(), outputLayer.end(), [rowRepresentation](perceptron &p) {p.setError(rowRepresentation); });
+	//we can use machinenum for target because there are only 10 in the ouput layer, 1 for each number to represent
+	std::for_each(std::execution::par, outputLayer.begin(), outputLayer.end(), [rowRepresentation](perceptron &p) 
+	{
+		double target = (p.getMachineNum() == rowRepresentation) ? 0.9 : 0.1;
+		p.setError(p.getActivation() * (1 - p.getActivation()) * (target - p.getActivation()));
+	});
 }
 void dataManager::calculateHiddenError()
 {
+	
+	std::vector<perceptron> * out = &outputLayer;
+	std::for_each(std::execution::par, hiddenLayer.begin(), hiddenLayer.end(), [out](perceptron &hidden) 
+	{
+		int machNum = hidden.getMachineNum();
+		double activationWeightDotProduct = std::transform_reduce(std::execution::par, out->begin(), out->end(), 0.0, std::plus<double>(), [machNum](perceptron &outNode) 
+		{
+			std::shared_ptr<std::vector<double>> outWeights = outNode.getWeights();
+			return outNode.getError() * outWeights->at(machNum);
+		});
+		hidden.setError(hidden.getActivation() * (1 -hidden.getActivation()) * activationWeightDotProduct);
+	});
 
+	//hiddennode index is the machine num, it doesn't correlate to target in this case
+	//but we can still use it for our dotproduct
 }
+
+//learning rate and momentum need to be passed as args for the lambdas
 void dataManager::updateWeights(int learningRate, int momentum, std::vector<double> data) 
 {
 	/*

@@ -49,6 +49,9 @@ public:
 		//outputLayer(boost::counting_iterator<int>(0), boost::counting_iterator<int>(10));
 		//std::vector<perceptron> v(boost::counting_iterator<int>(0), boost::counting_iterator<int>(10));
 		
+		learningRate = 0.1;
+		momentum = 0.9;
+
 		//parallelize this 
 		for (int perc = 0; perc < outputCount; ++perc)
 		{
