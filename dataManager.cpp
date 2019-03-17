@@ -90,8 +90,8 @@ void dataManager::learn()
 		updateWeights(learningRate, momentum, row);
 
 		++rowRep;
-		if (rowRep == 10)
-			break;
+		//if (rowRep == 30000)
+		//	break;
 	}
 }
 
@@ -100,7 +100,7 @@ void dataManager::learn()
 //make sure to include compilation tags
 void dataManager::calculateActivation(std::vector<perceptron> &nodes, std::vector<double> & inputData, int offset) 
 {
-//#pragma omp parallel for
+#pragma omp parallel for
 	for(int idx = 0; idx < nodes.size(); ++idx)
 	{
 		std::shared_ptr<std::vector<double>> weights = nodes[idx].getWeights();
@@ -218,7 +218,11 @@ int dataManager::test(std::vector<double> &testRow)
 	std::vector<double> hiddenActivations = getTestingActivations(hiddenLayer, testRow, 1);  //offset of 1 because 0 is the row rep
 	std::vector<double> outputActivations = getTestingActivations(outputLayer, hiddenActivations, 0); //no need for offset heree
 	
-	double guess = *std::max_element(outputActivations.begin(), outputActivations.end());
+
+	//I need the machinenumber of the max activation
+	//this will be used as the guess, not the actual activation itself
+	auto guess = distance(outputActivations.begin(), std::max_element(outputActivations.begin(), outputActivations.end()));
+
 	return (guess == testRow[0]) ? 1 : 0;
 
 
