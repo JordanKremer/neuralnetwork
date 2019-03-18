@@ -1,3 +1,10 @@
+/*
+dataManager.h
+Jordan Kremer
+3/17/2019
+
+
+*/
 #pragma once
 #include <vector>
 #include "perceptron.h"
@@ -66,7 +73,6 @@ public:
 
 	double computeActivation(double sum)
 	{
-		//exp() returns e^-sum
 		return 1 / (1 + exp(-sum));
 	}
 	bool loadWrapper(std::string inFile_training, std::string inFile_test);

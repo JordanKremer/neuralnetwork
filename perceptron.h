@@ -1,7 +1,14 @@
+/*
+perceptron.h
+Jordan Kremer
+3/17/2019
+
+Provides a container and functionaltiy for perceptron values. Header only. The functionality including mostly
+reflects setter and getter however weight update functionality is implemented within this file. 
+
+*/
+
 #pragma once
-
-//Make inline?
-
 #include <vector>
 #include <random>
 #include <execution>
@@ -22,19 +29,6 @@ public:
 		std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 		std::uniform_real_distribution<> dis(-0.05, 0.05);
 
-		//parallelize this
-		//https://thrust.github.io/doc/classthrust_1_1random_1_1uniform__real__distribution.html
-		/*
-			  thrust::minstd_rand rng;
-			  thrust::uniform_real_distribution<float> dist(-0.05,0.05);
-
-			  Or, parallelize the creation of perceptrons, no need to
-			  use rng in the device unless there is an easy way to do it
-		
-			or
-			https://stackoverflow.com/questions/12614164/generating-random-numbers-with-uniform-distribution-using-thrust
-			try this!^^^
-		*/
 		weights.reserve(weightCount);
 		for (int col = 0; col < weightCount; ++col)
 		{
@@ -43,36 +37,37 @@ public:
 
 	};
 
-	inline bool setWeights(std::vector<double> newWeights)
-	{ 
-		weights = newWeights;
-		//https://thrust.github.io/doc/group__copying.html
-		/*
-			thrust::copy(newWeights.begin(), newWeights.end(),
-			 weights.begin());
-		*/
-	};
-
 
 	void updateWeights(float learningRate, float momentum, std::vector<double> data, int offset)
 	{
-
 		//must start at index of 1 for hiddennodes because 0th is row representation and not a weight
 		//start at 0 for output layer
-//#pragma omp parallel for 
-		for (int index = 0 + offset; index < weights.size(); ++index)
+//#pragma omp parallel for  //do not use, much slower to use, do not use with top level for each parallel either, too many threads
+							//
+		for (int index = 0; index < weights.size(); ++index)
 		{
-			double deltaWeight = (learningRate * error * data[index]) + (momentum * previousDeltaWeights[index]);
+			double deltaWeight = (learningRate * error * data[index + offset]) + (momentum * previousDeltaWeights[index]);
 			previousDeltaWeights[index] = deltaWeight;
 			weights[index] += deltaWeight;
 		}
 	}
 
-	/*void setError(int rowRepresentation)
+
+
+	void updateWeightsParallel(float learningRate, float momentum, std::vector<double> data, int offset)
 	{
-		double target = (machineNum == rowRepresentation) ? 0.9 : 0;
-		error = activation * (1 - activation) * (target - activation);
-	}*/
+		int idx = 0;
+		double errorTmp = error;
+		auto prevDeltaTmp = std::make_shared<std::vector<double>>(previousDeltaWeights);
+		std::for_each(std::execution::par, weights.begin(), weights.end(),
+			[data, errorTmp, &prevDeltaTmp, &idx, learningRate, momentum, offset](double & weight)
+		{
+			double deltaWeight = (learningRate * errorTmp * data[idx + offset]) + (momentum * prevDeltaTmp->at(idx));
+			prevDeltaTmp->at(idx) = deltaWeight;
+			weight += deltaWeight;
+			++idx;
+		});
+	}
 
 	const std::shared_ptr <std::vector<double>> getWeights() { return  std::make_shared<std::vector<double>>(weights); }
 	const std::shared_ptr <std::vector<double>> getPreviousWeights(){ std::make_shared<std::vector<double>>(previousDeltaWeights); }
