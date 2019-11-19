@@ -9,7 +9,7 @@ reflects setter and getter however weight update functionality is implemented wi
 */
 
 #pragma once
-#include <vector>
+#include <vector> 
 #include <random>
 #include <execution>
 class perceptron

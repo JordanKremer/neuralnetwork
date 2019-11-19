@@ -10,7 +10,7 @@
 #include "dataManager.h"
 
 //run with input / output file as args?
-int main(int argc, char** argv)
+int main(int argc, char** argv) 
 {
 	using namespace std::chrono;
 	high_resolution_clock::time_point t1 = high_resolution_clock::now();
